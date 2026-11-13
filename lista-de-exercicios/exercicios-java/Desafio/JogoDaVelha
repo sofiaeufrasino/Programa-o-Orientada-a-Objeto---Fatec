@@ -1,0 +1,148 @@
+
+import java.util.Scanner;
+
+public class JogoDaVelha {
+
+    static char[][] tabuleiro = new char[3][3];
+    static Scanner entrada = new Scanner(System.in);
+
+    public static void exibirTabuleiro() {
+        System.out.println("\n  1   2   3");
+
+        for (int i = 0; i < 3; i++) {
+            System.out.print(i + 1 + " ");
+
+            for (int j = 0; j < 3; j++) {
+                if (tabuleiro[i][j] == '\0') {
+                    System.out.print("  ");
+                } else {
+                    System.out.print(tabuleiro[i][j] + " ");
+                }
+
+                if (j < 2) {
+                    System.out.print("| ");
+                }
+            }
+
+            System.out.println();
+
+            if (i < 2) {
+                System.out.println("  -----------");
+            }
+        }
+    }
+
+    public static void realizarJogada(char jogador) {
+
+        int linha, coluna;
+
+        while (true) {
+
+            System.out.println("\nJogador " + jogador);
+
+            System.out.print("Informe a linha: ");
+            linha = entrada.nextInt();
+
+            System.out.print("Informe a coluna: ");
+            coluna = entrada.nextInt();
+
+            if (linha >= 1 && linha <= 3 && coluna >= 1 && coluna <= 3) {
+
+                if (tabuleiro[linha - 1][coluna - 1] == '\0') {
+                    tabuleiro[linha - 1][coluna - 1] = jogador;
+                    break;
+                } else {
+                    System.out.println("Essa posição já está ocupada!");
+                }
+
+            } else {
+                System.out.println("Digite um número entre 1 e 3!");
+            }
+        }
+    }
+
+    public static boolean verificarVitoria(char jogador) {
+
+        // Verificar linhas e colunas
+        for (int i = 0; i < 3; i++) {
+
+            if (tabuleiro[i][0] == jogador &&
+                tabuleiro[i][1] == jogador &&
+                tabuleiro[i][2] == jogador) {
+                return true;
+            }
+
+            if (tabuleiro[0][i] == jogador &&
+                tabuleiro[1][i] == jogador &&
+                tabuleiro[2][i] == jogador) {
+                return true;
+            }
+        }
+
+        // Diagonal principal
+        if (tabuleiro[0][0] == jogador &&
+            tabuleiro[1][1] == jogador &&
+            tabuleiro[2][2] == jogador) {
+            return true;
+        }
+
+        // Diagonal secundaria
+        if (tabuleiro[0][2] == jogador &&
+            tabuleiro[1][1] == jogador &&
+            tabuleiro[2][0] == jogador) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean tabuleiroCompleto() {
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+
+                if (tabuleiro[i][j] == '\0') {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
+
+        char jogador = 'X';
+        boolean venceu = false;
+
+        System.out.println("===== JOGO DA VELHA =====");
+
+        while (venceu == false && tabuleiroCompleto() == false) {
+
+            exibirTabuleiro();
+
+            realizarJogada(jogador);
+
+            venceu = verificarVitoria(jogador);
+
+            if (venceu == false) {
+
+                if (jogador == 'X') {
+                    jogador = 'O';
+                } else {
+                    jogador = 'X';
+                }
+            }
+        }
+
+        exibirTabuleiro();
+
+        if (venceu == true) {
+            System.out.println("\nO jogador " + jogador + " venceu!");
+        } else {
+            System.out.println("\nA partida terminou empatada!");
+        }
+
+        entrada.close();
+    }
+}
